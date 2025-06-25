@@ -9,6 +9,9 @@ export default function App() {
   function handleDeleteItem(id) {
     setItems((items) => items.filter((items) => items.id !== id));
   }
+  function handleClearList() {
+    setItems([]);
+  }
   function handleCheckbox(id) {
     setItems((items) =>
       items.map((item) =>
@@ -23,6 +26,7 @@ export default function App() {
       <Form onAddItems={handleAddItems} />
       <Packing
         items={items}
+        onClearList={handleClearList}
         onDeleteItem={handleDeleteItem}
         onCheckbox={handleCheckbox}
       />
@@ -31,7 +35,7 @@ export default function App() {
   );
 }
 
-function Packing({ items, onDeleteItem, onCheckbox }) {
+function Packing({ items, onDeleteItem, onCheckbox, onClearList }) {
   const [sortBy, SetSortBy] = useState("input");
 
   let sortItems;
@@ -64,6 +68,7 @@ function Packing({ items, onDeleteItem, onCheckbox }) {
           <option value="name">sort by name</option>
           <option value="packed">sort by packed</option>
         </select>
+        <button onClick={() => onClearList()}>Clear list</button>
       </div>
     </div>
   );
@@ -80,7 +85,9 @@ function Item({ item, onDeleteItem, onCheckbox }) {
         />
       </span>
       <span style={item.packing ? { textDecoration: "line-through" } : {}}>
-        {item.name}
+        {item.quantity}
+        <span> </span>
+        { item.name}
       </span>
       <button onClick={() => onDeleteItem(item.id)}>❌</button>
     </li>
