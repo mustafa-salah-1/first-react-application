@@ -1,17 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 
-const data = [
-  { id: 1, name: "mustafa", quantity: 2, packing: true },
-  { id: 2, name: "yahya", quantity: 6, packing: false },
-  { id: 3, name: "waled", quantity: 9, packing: false },
-];
-
 export default function App() {
-  const [items, setItems] = useState([
-    { id: 1, name: "mustafa", quantity: 2, packing: true },
-  ]);
-
+  const [items, setItems] = useState([]);
   function handleAddItems(item) {
     setItems((items) => [...items, item]);
   }
@@ -25,6 +16,7 @@ export default function App() {
       )
     );
   }
+
   return (
     <div>
       <Logo />
@@ -34,7 +26,7 @@ export default function App() {
         onDeleteItem={handleDeleteItem}
         onCheckbox={handleCheckbox}
       />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -42,7 +34,6 @@ export default function App() {
 function Packing({ items, onDeleteItem, onCheckbox }) {
   return (
     <div className="packing">
-      <h1>Packing</h1>
       <ul>
         {items.map((item) => {
           return (
@@ -63,7 +54,11 @@ function Item({ item, onDeleteItem, onCheckbox }) {
   return (
     <li>
       <span>
-        <input type="checkbox" value={item.packing} onChange={() => onCheckbox(item.id)} />
+        <input
+          type="checkbox"
+          value={item.packing}
+          onChange={() => onCheckbox(item.id)}
+        />
       </span>
       <span style={item.packing ? { textDecoration: "line-through" } : {}}>
         {item.name}
@@ -73,10 +68,20 @@ function Item({ item, onDeleteItem, onCheckbox }) {
   );
 }
 
-function Stats() {
+function Stats({ items }) {
+  if (!items.length)
+    return <div className="footer">start add some item for your travel</div>;
+
+  const numItems = items.length;
+  const packedItems = items.filter((item) => item.packing).length;
+  const percent = Math.round((packedItems / numItems) * 100);
+
   return (
     <div className="footer">
-      <h1>Stats</h1>
+      {percent === 100
+        ? "you got everything now time to go. "
+        : `you have ${numItems} on your list, and you already packed ${packedItems} (
+      ${percent}% )`}
     </div>
   );
 }
