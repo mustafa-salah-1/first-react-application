@@ -1,7 +1,7 @@
 export default function Logo() {
   return (
     <div className="header">
-      <h1>logo travel</h1>
+      <h1>travel</h1>
     </div>
   );
 }
